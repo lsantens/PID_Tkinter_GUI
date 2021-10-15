@@ -2,7 +2,8 @@
 PID GUI for students to remember the effects of PID controller on a closed loop system
 
 Dependencies required:
-pip install scipy control
+
+pip install control
 pip install scipy
 
 
