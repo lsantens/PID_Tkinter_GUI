@@ -28,7 +28,9 @@ root.title("PID GUI")
 """Define classes"""
 class Plant:
     def __init__(self,master):
-#Create Plant Frame        
+#Create Title Box Frame        
+        self.titlebox=Frame(master,borderwidth=5)
+#Create Plant Frame
         self.fplant=Frame(master,borderwidth=5)
 #Create Gains Frame  
         self.fgain=Frame(master,borderwidth=5)
@@ -53,8 +55,10 @@ class Plant:
         self.__kp=[]
         self.__ki=[]
         self.__kd=[]
-#Create Widgets in Frame [plant]
-#         self.maintitle=Label(self.fplant,text='P.I.D. Reminder GUI',bg='#fff', fg='#f00', pady=10, padx=10, font=15)
+#Create Widgets in Titlebox Frame
+        self.maintitle=Label(self.titlebox,text='Interactive P.I.D. GUI',padx=450,pady=5,font=("Helvetica",24))
+        self.maintitle.grid(sticky=EW)
+#Create Widgets in Frame [plant]        
         self.num=Entry(self.fplant,width=50,borderwidth=5,justify=CENTER)
         self.num.insert(0,"Enter leading coefficients one at a time")
         self.num_btn=Button(self.fplant,text="Pull Num Coeff.",command=self.pull_num)
@@ -107,7 +111,7 @@ class Plant:
         self.kd_L=Label(self.kd_f,text=' Derivative:',padx=15)
         self.DL_L=Label(self.kd_f,text='                            Limits:',padx=5)  
 #Place Widgets in Frame [plant]
-#         self.maintitle.grid(row=1,column=2,rowspan=4)
+        self.maintitle.grid(row=1,column=2,rowspan=4)
         self.num_L.grid(row=2,column=0,rowspan=1)
         self.num_LPad.grid(row=2,column=2,rowspan=1)
         self.num.grid(row=2,column=1)
@@ -151,8 +155,13 @@ class Plant:
         self.kd.grid(row=1,column=4)
         self.DIb.grid(row=1,column=5)
         self.confirm_btnD.grid(row=0,column=6,rowspan=3)
-#Place the Frame in Window
+
+#Place the Frame in Window [titlebox]
+        self.titlebox.pack()
+    
+#Place the Frame in Window [plant]
         self.fplant.pack()
+    
 #Place subFrames in Frame [gains]
 
         self.kp_f.pack()
@@ -197,13 +206,14 @@ class Plant:
         #self._tauI.append(-1)
         #self._tauD.append(-1)
         if self._Kp==None:
-            self._Kp=[1]
+            self._Kp=[0]
         if self._tauI==None:
             self._tauI=[1]
         if self._tauD==None:
-            self._tauD=[1]
+            self._tauD=[0]
         tf = control.tf(self.lti_num,self.lti_denom)
-        Gc = self._Kp[-1]*control.tf(((self._tauD[-1]*            self._tauI[-1]),self._tauI[-1],1),(self._tauI[-1],0))
+        Gc = self._Kp[-1]*control.tf(((self._tauD[-1]*\
+            self._tauI[-1]),self._tauI[-1],1),(self._tauI[-1],0))
 
         Hs = (tf*Gc)/(1+(tf*Gc))
         print(Hs)
@@ -216,7 +226,7 @@ class Plant:
         self.a.plot(t, y,'r-',linewidth=2,label='Y(s) Using PID')
         self.a.set_xlabel('Time (sec)')
         self.a.set_ylabel('Amplitude')
-        self.a.set_ylim(min(y),(max(y)+1))
+        self.a.set_ylim(min(u),(max(u)+1))
         self.a.set_title('Step Response P.I.D. Plot')
         self.a.legend(loc='best')
 #         self.a.legend((y), ('Tuned Controller Output'), 'upper right')
